@@ -13,45 +13,107 @@ $(document).ready(function(){
   	});
 
 /*-- Malcolm's Code Begins  -----------------------*/
-
-var count = 0;
+/*--- Declare Variables ---*/
+var guessCount = 0;
 var newGuess;
 var randomNumber;
+var distanceFromNumber;
+var wonGame = false;
 
+/*--- Generate a random number ---*/
 var generateNewNumber = function(){
-
-	Math.floor((Math.random()*101)+1);
-	return generateNewNumber;
-	
+	randomNumber = Math.floor((Math.random()*101)+1);
+	console.log("randomNumber is " +randomNumber);	
 };
 
-randomNumber = generateNewNumber();
+/*--- Clear guess text section ---*/
+var clearGuess = function() {
+	$("#userGuess").val("").focus();
+};
 
-/*-- New Game (press button
- and when page loads) --*/
-	$(".new").click(function(){
-		generateNewNumber();
-	/*-- reset guess count --*/
-	/*-- clear <ul> guesses --*/
-	});
+/*--- Remove past Guesses ---*/
+var removePastGuesses = function() {
+	$("ul.guessBox li").remove();
+};
 
-/* Generate random number from 1 - 100 */
-/* make sure user guess is valid number */
+/*--- Display the number of guesses ---*/
+var guessCountDisplay = function() {
+	$("#count").text(guessCount);
+};
+ 
+ /*--- Check how far the guess is and provide feedback---*/
+var checkTemperature = function() {
+	distanceFromNumber = (Math.abs(randomNumber - newGuess));
+	if (distanceFromNumber === 0) {
+		AddFeedback("You Got It!!!");
+		$("#userGuess").val(randomNumber + "!");
+		wonGame = true;
+	} else if (distanceFromNumber < 2 ) {
+		AddFeedback("Scalding!");
+	} else if (distanceFromNumber < 4 ) {
+		AddFeedback("Very Hot!");
+	} else if (distanceFromNumber < 8 ) {
+		AddFeedback("Hot!");
+	} else if (distanceFromNumber < 13 ) {
+		AddFeedback("Warm");
+	} else if (distanceFromNumber < 23 ) {
+		AddFeedback("Luke Warm");
+	} else if (distanceFromNumber < 38 ) {
+		AddFeedback("Cool");
+	} else if (distanceFromNumber < 54 ) {
+		AddFeedback("Cold");
+	} else {
+		AddFeedback("Ice Cold!");
+	}
+};
+
+/*--- Display the Feedback ---*/
+ var AddFeedback = function(feedback) {
+ 	$("#feedback").text(feedback);
+ };
+
+
+/* ---Page Load, generate random number */
+generateNewNumber();
+
+
+
+/* --- User inputs guess --*/
 
 	$("form").submit(function(event){
 	event.preventDefault();
-	newGuess = $("#userGuess").val();
-	if(newGuess > 100 || newGuess % 1 !== 1) {
-		return(false);
-	} else {
-		$(".guessBox").append("<li>" +newGuess+ "</li>");
+	if (wonGame == false) {
+		newGuess = +$("#userGuess").val();
+		/*--- Check if valid number --*/
+		if (newGuess % 1 !== 0 || newGuess > 100 || newGuess < 0) {
+			alert("Not a valid number");
+			return(false);
+		} else {
+			event.preventDefault();
+			$(".guessBox").append("<li>" +newGuess+ "</li>");
+			clearGuess();
+			guessCount++;
+			guessCountDisplay();
+			checkTemperature();
 		}
+	} else {
+		AddFeedback("You already won! Start a new game.");
+	}
 
 	});
-/* take user guess and supply feedback */
-/* guess should be added to the list items */
-/* count guesses, reset to zero at page load */
 
+
+/*-- New Game Click, reset --*/
+	$(".new").click(function(){
+		generateNewNumber(); 
+		clearGuess();
+		guessCount = 0;
+		wonGame = false;
+		removePastGuesses();
+		guessCountDisplay();
+		AddFeedback("Make your guess!");
+		$("#guessButton").disabled = false;
+	});
 
 
 });
