@@ -103,8 +103,6 @@ generateNewNumber();
 	}
 
 	});
-
-
 /*-- "+ New Game" click to reset --*/
 	$(".new").click(function(){
 		generateNewNumber(); 
