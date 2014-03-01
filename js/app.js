@@ -13,6 +13,7 @@ $(document).ready(function(){
   	});
 
 /*-- Malcolm's Code Begins  -----------------------*/
+
 /*--- Declare Variables ---*/
 var guessCount = 0;
 var newGuess;
@@ -23,7 +24,7 @@ var wonGame = false;
 /*--- Generate a random number ---*/
 var generateNewNumber = function(){
 	randomNumber = Math.floor((Math.random()*101)+1);
-	console.log("randomNumber is " +randomNumber);	
+	console.log("randomNumber is " +randomNumber);
 };
 
 /*--- Clear guess text section ---*/
@@ -41,6 +42,11 @@ var guessCountDisplay = function() {
 	$("#count").text(guessCount);
 };
  
+ /*--- Display the Feedback ---*/
+ var AddFeedback = function(feedback) {
+	$("#feedback").text(feedback);
+ };
+
  /*--- Check how far the guess is and provide feedback---*/
 var checkTemperature = function() {
 	distanceFromNumber = (Math.abs(randomNumber - newGuess));
@@ -67,10 +73,6 @@ var checkTemperature = function() {
 	}
 };
 
-/*--- Display the Feedback ---*/
- var AddFeedback = function(feedback) {
- 	$("#feedback").text(feedback);
- };
 
 
 /* ---Page Load, generate random number */
@@ -82,7 +84,7 @@ generateNewNumber();
 
 	$("form").submit(function(event){
 	event.preventDefault();
-	if (wonGame == false) {
+	if (wonGame === false) {
 		newGuess = +$("#userGuess").val();
 		/*--- Check if valid number --*/
 		if (newGuess % 1 !== 0 || newGuess > 100 || newGuess < 0) {
@@ -103,7 +105,7 @@ generateNewNumber();
 	});
 
 
-/*-- New Game Click, reset --*/
+/*-- "+ New Game" click to reset --*/
 	$(".new").click(function(){
 		generateNewNumber(); 
 		clearGuess();
@@ -112,7 +114,6 @@ generateNewNumber();
 		removePastGuesses();
 		guessCountDisplay();
 		AddFeedback("Make your guess!");
-		$("#guessButton").disabled = false;
 	});
 
 
